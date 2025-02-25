@@ -31,5 +31,53 @@ public class LogClient
               { 
                 System.out.println("Connected to the logging server.");
               }
-    }
+              while (true)
+             {
+                System.out.println("\nSelect the mode:");
+                System.out.println("i.   Manual");
+                System.out.println("ii.  Automatic");
+                System.out.println("iii. Spam");
+                System.out.println("iv.  Exit");
+                System.out.print("Enter your choice: ");
+                
+                int choice;
+                try 
+                {
+                    choice = Integer.parseInt(scanner.nextLine().trim());
+                } 
+
+                catch (NumberFormatException e) 
+                {
+                    System.out.println("Invalid input! Please enter a number.");
+                    continue; 
+                }
+
+                switch (choice)
+                 {
+                    case i:
+                        manualMode(out, in, scanner);
+                        break;
+
+                    case ii:
+                        automaticMode(out, in); 
+                        break;
+
+                    case iii:
+                        spamMode(out, in); 
+                        break;
+
+                    case iv:
+                        System.out.println("Exiting...");
+                        return;
+                        
+                    default:
+                        System.out.println("Invalid choice! Please enter valid choice.");
+                }
+            }
+        } 
+        
+        catch (IOException e) 
+        {
+            e.printStackTrace(); 
+        }
  }

@@ -15,7 +15,8 @@ import pytz
 import time
 from datetime import datetime, timezone as dt_timezone 
 
-CONFIG_FILE = "config.json"
+CONFIG_FILE = "config.json" 
+"""path to the configuration file. """
 
 def load_config():
     """Load server configuration from a JSON file."""
@@ -25,10 +26,10 @@ def load_config():
 config = load_config()
 HOST = config["host"]  
 PORT = config["port"]  
-LOG_FILE = f"{config['log_file']}.log" 
+LOG_FILE = f"{config['log_file']}.log"  """Log file name with .log extension. """
 
 def write_log(message, addr, level="INFO"):
-    """Write log message to the log file in a specific format."""
+    """Writing  a log message to the log file."""
 
     valid_levels = [
         "Emergency", "Alert", "Critical", "Error", "Warning", 
@@ -46,6 +47,7 @@ def write_log(message, addr, level="INFO"):
 
     timestamp = local_time.strftime("%b %d %Y %H:%M:%S")  
 
+    """Building  log message string including client IP, log level, and message """
     log_message = f"{timestamp} {addr[0]} {level} {message}\n"
 
 
@@ -54,12 +56,13 @@ def write_log(message, addr, level="INFO"):
         log.write(log_message)
 
 def handle_client(conn, addr):
-    """Handle communication with a connected client."""
+    """Handles the communication with a client."""
     print(f"Connection from {addr[0]} established.")  
 
     try:
         while True:
            
+            """Receive data from the client and decode it """
             data = conn.recv(1024).decode().strip()
             
             if not data:
@@ -78,10 +81,10 @@ def handle_client(conn, addr):
 
     finally:
         
-        conn.close()
+        conn.close() 
 
 def start_server():
-    """Start the logging server to accept client connections."""
+    """Starting the server connection."""
     
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
@@ -97,4 +100,4 @@ def start_server():
         threading.Thread(target=handle_client, args=(conn, addr), daemon=True).start()
 
 if __name__ == "__main__":
-    start_server()
+    start_server() 

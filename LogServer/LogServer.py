@@ -12,7 +12,8 @@ import socket
 import threading  
 import json 
 import pytz  
-from datetime import datetime  
+import time
+from datetime import datetime, timezone as dt_timezone 
 
 CONFIG_FILE = "config.json"
 
@@ -26,33 +27,35 @@ HOST = config["host"]
 PORT = config["port"]  
 LOG_FILE = f"{config['log_file']}.log" 
 
-def write_log(message, addr):
+def write_log(message, addr, level="INFO"):
     """Write log message to the log file in a specific format."""
 
-    utc_now = datetime.utcnow().replace(tzinfo=pytz.utc)
+    valid_levels = [
+        "Emergency", "Alert", "Critical", "Error", "Warning", 
+        "Notification", "Informational", "Debugging", "INFO"
+    ]
 
-    timezone = pytz.timezone("UTC")
+    if level not in valid_levels:
+        level = "INFO"
 
-    local_time = utc_now.astimezone(timezone)
+    utc_now = datetime.now(dt_timezone.utc)
+
+    canada_timezone = pytz.timezone("America/Toronto") 
+
+    local_time = utc_now.astimezone(canada_timezone)  
 
     timestamp = local_time.strftime("%b %d %Y %H:%M:%S")  
 
-    device_id = "pix-f"
+    log_message = f"{timestamp} {addr[0]} {level} {message}\n"
 
-    facility_code = "%PIX"
 
-    severity_level = 5  
-
-    message_number = "111008"
-
-    log_message = f"{timestamp} {device_id}: {facility_code}-{severity_level}-{message_number}: {message}\n"
 
     with open(LOG_FILE, "a") as log:
         log.write(log_message)
 
 def handle_client(conn, addr):
     """Handle communication with a connected client."""
-    print(f"Connection from {addr} established.")  
+    print(f"Connection from {addr[0]} established.")  
 
     try:
         while True:
@@ -62,15 +65,16 @@ def handle_client(conn, addr):
             if not data:
                 break
 
-            log_entry = f"'{addr}' {data}"
+            log_entry = f"{data}"  
             
-            write_log(log_entry, addr)
+            print(f"{addr[0]} {log_entry}") 
+            write_log(log_entry, addr)  
 
             conn.send("Log entry received.\n".encode())
 
     except ConnectionResetError:
         
-        print(f"Connection with {addr} lost.")
+        print(f"Connection with {addr[0]} lost.")
 
     finally:
         
@@ -92,5 +96,5 @@ def start_server():
       
         threading.Thread(target=handle_client, args=(conn, addr), daemon=True).start()
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     start_server()

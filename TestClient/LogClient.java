@@ -30,7 +30,7 @@ public class LogClient
              Scanner scanner = new Scanner(System.in))
               { 
                 System.out.println("Connected to the logging server.");
-              }
+              
               while (true)
              {
                 System.out.println("\nSelect the mode:");
@@ -80,4 +80,68 @@ public class LogClient
         {
             e.printStackTrace(); 
         }
- }
+ 
+    }
+
+     private static void manualMode(PrintWriter out, BufferedReader in, Scanner scanner) throws IOException 
+    {
+        System.out.print("Enter the message: ");
+        String message = scanner.nextLine(); 
+        out.println(message); 
+        System.out.println("Server's response: " + in.readLine());
+    }
+
+    private static void automaticMode(PrintWriter out, BufferedReader in) throws IOException
+     {
+        String autoMessage = "This is an automatic message."; 
+        System.out.println("Automatic mode: Sending messages to the server....");
+
+        for (int i = 1; i <= 15; i++) 
+        {  
+            out.println(autoMessage + " [" + i + "]");  
+            System.out.println("Server's response: " + in.readLine()); 
+
+            try 
+            {
+                Thread.sleep(500); 
+            } 
+            
+            catch (InterruptedException e)
+            {
+                System.out.println("Sleep interrupted: " + e.getMessage());
+            }
+        }
+     }
+
+ private static void spamMode(PrintWriter out, BufferedReader in) throws IOException 
+ {
+    String spamMessage = "Spam message from client"; 
+    Random random = new Random();
+    int spamCount = random.nextInt(51) + 50; 
+
+    System.out.println("Spam mode: Sending " + spamCount + " messages to the server....");
+
+    for (int i = 0; i < spamCount; i++) 
+    {
+        String fullMessage = spamMessage + " [" + (i + 1) + "]"; 
+        out.println(fullMessage);  
+
+        System.out.println("Server response: " + in.readLine()); 
+
+        try 
+        {
+            Thread.sleep(50); 
+        } 
+        
+        catch (InterruptedException e) 
+        {
+            System.out.println("Sleep interrupted: " + e.getMessage());
+        }
+    }
+
+    System.out.println("Spam mode complete. Server processed all of the messages.");
+    }
+}
+     
+
+

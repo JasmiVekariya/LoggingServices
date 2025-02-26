@@ -39,10 +39,10 @@ public class LogClient
               while (true)
              {
                 System.out.println("\nSelect the mode:");        
-                System.out.println("i.   Manual");                
-                System.out.println("ii.  Automatic");             
-                System.out.println("iii. Spam");                   
-                System.out.println("iv.  Exit");                   
+                System.out.println("1.   Manual");                
+                System.out.println("2.  Automatic");             
+                System.out.println("3. Spam");                   
+                System.out.println("4.  Exit");                   
                 System.out.print("Enter your choice: ");
                 
                 int choice;
@@ -61,19 +61,19 @@ public class LogClient
                 // Choose the mode based on the user's input
                 switch (choice)
                  {
-                    case i:                       // Case for manual mode
+                    case 1:                       // Case for manual mode
                         manualMode(out, in, scanner);
                         break;
 
-                    case ii:                      // Case for automatic mode
+                    case 2:                      // Case for automatic mode
                         automaticMode(out, in); 
                         break;
 
-                    case iii:                     // Case for spam mode
+                    case 3:                     // Case for spam mode
                         spamMode(out, in); 
                         break;
 
-                    case iv:                      // Case for exit
+                    case 4:                      // Case for exit
                         System.out.println("Exiting...");
                         return;
                         
